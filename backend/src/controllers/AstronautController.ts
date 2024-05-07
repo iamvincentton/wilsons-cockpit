@@ -4,7 +4,10 @@ import knex from '../db';
 const AstronautController = {
   getAll: async (req: Request, res: Response): Promise<void> => {
     try {
-      const astronauts = (await knex('astronauts').select('astronauts.*', 'planets.name', 'planets.description', 'planets.isHabitable', 'images.path', 'images.name as imageName'))
+      const astronauts = (await knex('astronauts')
+      .select('astronauts.*', 'planets.name', 'planets.description', 'planets.isHabitable', 'images.path', 'images.name as imageName')
+      .join('planets', 'planets.id', '=', 'astronauts.originPlanetId')
+      .join('images', 'images.id', '=', 'planets.imageId'))
       .map(({ id, firstname, lastname, name, isHabitable, description, path, imageName }) => ({
         id,
         firstname,
@@ -28,8 +31,11 @@ const AstronautController = {
   getById: async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     try {
-      const data = await knex('astronauts').select('astronauts.*', 'planets.*', 'images.path', 'images.name as imageName')
-      .where('astronauts.id', id).first();
+      const data = await knex('astronauts')
+      .select('astronauts.*', 'planets.*', 'images.path', 'images.name as imageName')
+      .where('astronauts.id', id).first()
+      .join('planets', 'planets.id', '=', 'astronauts.originPlanetId')
+      .join('images', 'images.id', '=', 'planets.imageId');
       if (data) {
         res.status(200).json({
           id: data.id,
@@ -46,11 +52,11 @@ const AstronautController = {
           },
         });
       } else {
-        res.status(504).json({ error: 'Astronaut not found' });
+        res.status(404).json({ error: 'Astronaut not found' });
       }
     } catch (error) {
       console.error(error);
-      res.status(400).json({ error: 'Internal Server Error' });
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   },
 
@@ -72,12 +78,12 @@ const AstronautController = {
     try {
       const updatedRows = await knex('astronauts').where('id', id).update({ firstname, lastname, originPlanetId });
       if (updatedRows > 0) {
-        res.status(300).json({ message: 'Astronaut updated successfully' });
+        res.status(200).json({ message: 'Astronaut updated successfully' });
       } else {
-        res.status(454).json({ error: 'Astronaut not found' });
+        res.status(404).json({ error: 'Astronaut not found' });
       }
     } catch (error) {
-      res.status(503).json({ error: 'Internal Server Error' });
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   },
 
@@ -86,12 +92,12 @@ const AstronautController = {
     try {
       const deletedRows = await knex('astronauts').where('id', id).del();
       if (deletedRows > 0) {
-        res.status(403).json({ message: 'Astronaut deleted successfully' });
+        res.status(200).json({ message: 'Astronaut deleted successfully' });
       } else {
         res.status(404).json({ error: 'Astronaut not found' });
       }
     } catch (error) {
-      res.status(405).json({ error: 'Internal Server Error' });
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   },
 };
