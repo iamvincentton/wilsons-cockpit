@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import knex from '../db';
+// import Planet from '../entities/Planet';
 
 const AstronautController = {
   getAll: async (req: Request, res: Response): Promise<void> => {
@@ -14,7 +15,7 @@ const AstronautController = {
         lastname,
         originPlanet: {
           name,
-          isHabitable,
+          isHabitable: isHabitable === 1, // Convertion de 1/0 à true/false
           description,
           image: {
             path,
@@ -33,9 +34,10 @@ const AstronautController = {
     try {
       const data = await knex('astronauts')
       .select('astronauts.*', 'planets.*', 'images.path', 'images.name as imageName')
-      .where('astronauts.id', id).first()
       .join('planets', 'planets.id', '=', 'astronauts.originPlanetId')
-      .join('images', 'images.id', '=', 'planets.imageId');
+      .join('images', 'images.id', '=', 'planets.imageId')
+      .where('astronauts.id', id)
+      .first();
       if (data) {
         res.status(200).json({
           id: data.id,
@@ -43,7 +45,7 @@ const AstronautController = {
           lastname: data.lastname,
           originPlanet: {
             name: data.name,
-            isHabitable: data.isHabitable,
+            isHabitable: data.isHabitable === 1, // Convertion de 1/0 à true/false
             description: data.description,
             image: {
               path: data.path,
@@ -62,8 +64,26 @@ const AstronautController = {
 
   create: async (req: Request, res: Response): Promise<void> => {
     const { firstname, lastname, originPlanetId } = req.body;
+
+    // Basic input validation
+    if (!firstname || !lastname || !originPlanetId) {
+      res.status(400).json({ error: 'Missing required fields' });
+      return;
+    }
+
     try {
+      const planet = await findPlanet(originPlanetId);
+      if (!planet) {
+        res.status(400).json({ error: 'Origin planet not found' });
+        return;
+      }
+      if (planet.isHabitable === 0) {
+        res.status(400).json({ error: 'Astronauts can only come from habitable planets' });
+        return;
+      }
+
       const [id] = await knex.insert({ firstname, lastname, originPlanetId }).into('astronauts');
+
       res.status(200).json({
         id, firstname, lastname, originPlanetId,
       });
@@ -76,12 +96,25 @@ const AstronautController = {
     const { id } = req.params;
     const { firstname, lastname, originPlanetId } = req.body;
     try {
-      const updatedRows = await knex('astronauts').where('id', id).update({ firstname, lastname, originPlanetId });
-      if (updatedRows > 0) {
-        res.status(200).json({ message: 'Astronaut updated successfully' });
-      } else {
+      const astronaut = await knex('astronauts').where('id', id).first();
+      if (!astronaut) {
         res.status(404).json({ error: 'Astronaut not found' });
+        return;
       }
+
+      const planet = await findPlanet(originPlanetId);
+      if (!planet) {
+        res.status(400).json({ error: 'Origin planet not found' });
+        return;
+      }
+
+      if (planet.isHabitable === 0) {
+        res.status(400).json({ error: 'Astronauts can only come from habitable planets' });
+        return;
+      }
+      
+      await knex('astronauts').where('id', id).update({ firstname, lastname, originPlanetId });
+      res.status(200).json({ message: 'Astronaut updated successfully' });
     } catch (error) {
       res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -101,5 +134,13 @@ const AstronautController = {
     }
   },
 };
+
+async function findPlanet(id: number) {
+  return await knex('planets')
+    .select('planets.*', 'images.path', 'images.name as imageName')
+    .join('images', 'images.id', '=', 'planets.imageId')
+    .where('planets.id', id)
+    .first();
+}
 
 export default AstronautController;
