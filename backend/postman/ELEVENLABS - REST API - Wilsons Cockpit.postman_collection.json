@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "9c21dccb-dc5f-4b98-8146-6284d2516ae2",
 		"name": "ELEVENLABS - REST API - Wilsons Cockpit",
-		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n```\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Tests\" tab**\n\nTests help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/b5f280a7-4b09-48ec-857f-0a7ed99d7ef8/U2NyZWVuc2hvdCAyMDIzLTAzLTI3IGF0IDkuNDcuMjggUE0ucG5n\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) in \"Tests\" to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+		"description": "**Overview:**  \nThis collection encapsulates all the RESTful endpoints for managing data related to images, planets, and astronauts for the Wilsons Cockpit project. It is designed to provide developers and front-end applications easy access to perform CRUD operations on these resources.\n\n**Resources:**\n\n1. **Images** - Manages image records which can be linked to other entities like planets or astronauts.\n    \n    - `GET /images` - Retrieve all images.\n        \n    - `GET /images/:id` - Retrieve a specific image by ID.\n        \n    - `POST /images` - Create a new image.\n        \n    - `PUT /images/:id` - Update an existing image by ID.\n        \n    - `DELETE /images/:id` - Delete an image by ID.\n        \n2. **Planets** - Handles all data related to planets in our database.\n    \n    - `GET /planets` - Retrieve all planets.\n        \n    - `GET /planets/:id` - Retrieve a specific planet by ID.\n        \n    - `POST /planets` - Create a new planet.\n        \n    - `PUT /planets/:id` - Update a specific planet by ID.\n        \n    - `DELETE /planets/:id` - Delete a specific planet by ID.\n        \n3. **Astronauts** - Manages astronaut data including personal details and their missions.\n    \n    - `GET /astronauts` - Retrieve all astronauts.\n        \n    - `GET /astronauts/:id` - Retrieve a specific astronaut by ID.\n        \n    - `POST /astronauts` - Create a new astronaut.\n        \n    - `PUT /astronauts/:id` - Update an astronaut's details by ID.\n        \n    - `DELETE /astronauts/:id` - Remove an astronaut from the database by ID.\n        \n\n**Enhancements (Planned Features):**\n\n- **Aggregated Data Endpoints:** Routes to fetch complex data, such as astronauts with details about their assigned planets.\n    \n- **Filtering, Pagination, and Sorting:** Enhancements to list retrieval endpoints to support filtering by criteria, pagination for large datasets, and sorting capabilities to organize data retrieval.\n    \n- **Advanced Queries:** Implementing endpoints that support complex querying capabilities for more dynamic data manipulation.\n    \n- **Statistics and Summaries:** Introducing endpoints to fetch statistical data or summaries, which provide insights at a glance.\n    \n- **Real-time Updates:** Establishing mechanisms such as webhooks to notify clients of real-time data changes.\n    \n- **Security Enhancements:** Adding authentication and authorization mechanisms to secure access to the API, ensuring data integrity and security.\n    \n\n**Usage Notes:**\n\n- Please ensure you have the necessary permissions before accessing or modifying data.\n    \n- Refer to the individual endpoint documentation for specific parameters, request body specifications, and possible error codes.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "13968515"
 	},
@@ -256,13 +256,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/planets/5",
+							"raw": "{{base_url}}/planets/4",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"planets",
-								"5"
+								"4"
 							]
 						},
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -290,7 +290,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Puding Factory\",\n    \"isHabitable\": true,\n    \"description\": \"Cette planette contient beaucoup de desserts précieux\",\n    \"imageId\": \"5\"\n}",
+							"raw": "{\n    \"name\": \"Puding Factory\",\n    \"isHabitable\": true,\n    \"description\": \"Cette planette contient beaucoup de desserts précieux\",\n    \"imageId\": \"6\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -332,7 +332,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Pudding Sweet Factory\"\n}",
+							"raw": "{\n    \"name\": \"Pudding Sweet Factory\",\n    \"isHabitable\": false,\n    \"description\": \"Cette planète contient beaucoup de desserts précieux\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -340,13 +340,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/planets/5",
+							"raw": "{{base_url}}/planets/9",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"planets",
-								"5"
+								"9"
 							]
 						},
 						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
@@ -382,13 +382,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/planets/1",
+							"raw": "{{base_url}}/planets/5",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"planets",
-								"1"
+								"5"
 							]
 						},
 						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
@@ -451,13 +451,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/astronauts/1",
+							"raw": "{{base_url}}/astronauts/5",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"astronauts",
-								"1"
+								"5"
 							]
 						},
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -485,7 +485,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+							"raw": "{\n\t\"firstname\": \"Ben\",\n    \"lastname\": \"Carter\",\n    \"originPlanetId\": 4\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -527,7 +527,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+							"raw": "{\n\t\"firstname\": \"Jules\",\n    \"lastname\": \"Marie\",\n    \"originPlanetId\": 4\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -535,13 +535,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/astronauts/1",
+							"raw": "{{base_url}}/astronauts/5",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"astronauts",
-								"1"
+								"5"
 							]
 						},
 						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
@@ -577,13 +577,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/astronauts/1",
+							"raw": "{{base_url}}/astronauts/5",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"astronauts",
-								"1"
+								"5"
 							]
 						},
 						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
@@ -591,178 +591,6 @@
 					"response": []
 				}
 			]
-		},
-		{
-			"name": "Get data",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
-						]
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{base_url}}/info?id=1",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
-					]
-				},
-				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
-			},
-			"response": []
-		},
-		{
-			"name": "Post data",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"pm.test(\"Successful POST request\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-							"});",
-							""
-						]
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{base_url}}/info",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"info"
-					]
-				},
-				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
-			},
-			"response": []
-		},
-		{
-			"name": "Update data",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"pm.test(\"Successful PUT request\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
-							"});",
-							""
-						]
-					}
-				}
-			],
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{base_url}}/info?id=1",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
-					]
-				},
-				"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
-			},
-			"response": []
-		},
-		{
-			"name": "Delete data",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"pm.test(\"Successful DELETE request\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
-							"});",
-							""
-						]
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{base_url}}/info?id=1",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
-					]
-				},
-				"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
-			},
-			"response": []
 		}
 	],
 	"event": [
