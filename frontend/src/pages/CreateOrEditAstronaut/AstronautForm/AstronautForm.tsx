@@ -134,6 +134,15 @@ export function AstronautForm({
             error={formState.lastname}
             onChange={(e) => setAstronautLastname(e.target.value)}
           />
+          <HUDAutoComplete
+            name="planet"
+            label="planet of origin"
+            required
+            defaultValue={defaultSelectedPlanet}
+            error={formState.planet}
+            onChange={(planet) => setAstronautOriginPlanet(planet.value)}
+            fetchOptions={getPlanetListByNameAPICall}
+          />
           <Flexbox
             className={styles.astronautformButtons}
             alignItems="center"
