@@ -74,9 +74,9 @@ export function AstronautListContainer({
 
   return (
     <>
-      {!isLoading ? (
+      {isLoading ? (
         <HUDWindowLoader
-          name="astronautlist-laoder"
+          name="astronautlist-loader"
           label="astronaut in the spaceship"
           className={styles.astronautlistcontainer}
         />
