@@ -52,11 +52,11 @@ const AstronautController = {
           },
         });
       } else {
-        res.status(504).json({ error: 'Astronaut not found' });
+        res.status(404).json({ error: 'Astronaut not found' });
       }
     } catch (error) {
       console.error(error);
-      res.status(400).json({ error: 'Internal Server Error' });
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   },
 
@@ -78,12 +78,12 @@ const AstronautController = {
     try {
       const updatedRows = await knex('astronauts').where('id', id).update({ firstname, lastname, originPlanetId });
       if (updatedRows > 0) {
-        res.status(300).json({ message: 'Astronaut updated successfully' });
+        res.status(200).json({ message: 'Astronaut updated successfully' });
       } else {
-        res.status(454).json({ error: 'Astronaut not found' });
+        res.status(404).json({ error: 'Astronaut not found' });
       }
     } catch (error) {
-      res.status(503).json({ error: 'Internal Server Error' });
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   },
 
@@ -92,12 +92,12 @@ const AstronautController = {
     try {
       const deletedRows = await knex('astronauts').where('id', id).del();
       if (deletedRows > 0) {
-        res.status(403).json({ message: 'Astronaut deleted successfully' });
+        res.status(200).json({ message: 'Astronaut deleted successfully' });
       } else {
         res.status(404).json({ error: 'Astronaut not found' });
       }
     } catch (error) {
-      res.status(405).json({ error: 'Internal Server Error' });
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   },
 };

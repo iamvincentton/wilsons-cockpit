@@ -29,7 +29,7 @@ const ImageController = {
     const { name, path } = req.body;
     try {
       const [id] = await knex('images').insert({ name, path });
-      res.status(650).json({ id, name, path });
+      res.status(200).json({ id, name, path });
     } catch (error) {
       res.status(500).json({ error: 'Internal Server Error' });
     }
