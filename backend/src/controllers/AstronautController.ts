@@ -4,7 +4,10 @@ import knex from '../db';
 const AstronautController = {
   getAll: async (req: Request, res: Response): Promise<void> => {
     try {
-      const astronauts = (await knex('astronauts').select('astronauts.*', 'planets.name', 'planets.description', 'planets.isHabitable', 'images.path', 'images.name as imageName'))
+      const astronauts = (await knex('astronauts')
+      .select('astronauts.*', 'planets.name', 'planets.description', 'planets.isHabitable', 'images.path', 'images.name as imageName')
+      .join('planets', 'planets.id', '=', 'astronauts.originPlanetId')
+      .join('images', 'images.id', '=', 'planets.imageId'))
       .map(({ id, firstname, lastname, name, isHabitable, description, path, imageName }) => ({
         id,
         firstname,
@@ -28,8 +31,11 @@ const AstronautController = {
   getById: async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     try {
-      const data = await knex('astronauts').select('astronauts.*', 'planets.*', 'images.path', 'images.name as imageName')
-      .where('astronauts.id', id).first();
+      const data = await knex('astronauts')
+      .select('astronauts.*', 'planets.*', 'images.path', 'images.name as imageName')
+      .where('astronauts.id', id).first()
+      .join('planets', 'planets.id', '=', 'astronauts.originPlanetId')
+      .join('images', 'images.id', '=', 'planets.imageId');
       if (data) {
         res.status(200).json({
           id: data.id,
