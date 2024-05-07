@@ -69,7 +69,7 @@ export function HUDPlanetList({
 
             return (
               <HUDListItem
-                key={planetName}
+                key={id+planetName}
                 hasBorder={!isLastElement}
                 onClick={handlePlanetClick}
                 className={styles.planetlistItem}
