@@ -2,6 +2,7 @@ version: "3"
 
 services:
   server-eleven-test:
+    container_name: server-eleven-test
     image: node:20-alpine
     volumes:
       - ./:/code/
