@@ -81,6 +81,7 @@ export function HUDAstronautList({
 
             return (
               <HUDListItem
+                key={id+firstname+lastname}
                 hasBorder={!isLastElement}
               >
                 <Flexbox
