@@ -8,7 +8,7 @@ export interface Planet {
   imageId: string;
 }
 
-interface PlanetData {
+export interface PlanetData {
   id: string;
   name: string;
   description: string;

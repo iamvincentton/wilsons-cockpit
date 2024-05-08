@@ -1,4 +1,3 @@
-// src/repositories/__tests__/PlanetRepository.test.ts
 import { PlanetRepository, Planet } from '../../../repositories/PlanetRepository';
 import knex from '../../../db'; // Adjust the path according to your project structure
 import { MockedFunction } from 'jest-mock';

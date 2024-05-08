@@ -1,84 +1,50 @@
-// src/services/__tests__/AstronautService.test.ts
-import { AstronautRepository, Astronaut } from '../../../repositories/AstronautRepository';
-import { AstronautService, NotFoundError, BadRequestError } from '../../../services/AstronautService';
+import { PlanetRepository, Planet, PlanetData } from '../../../repositories/PlanetRepository';
+import { PlanetService, NotFoundError } from '../../../services/PlanetService';
 
-jest.mock('../../../repositories/AstronautRepository');
+jest.mock('../../../repositories/PlanetRepository');
 
-const mockAstronautRepository = new AstronautRepository() as jest.Mocked<AstronautRepository>;
+const mockPlanetRepository = new PlanetRepository() as jest.Mocked<PlanetRepository>;
 
-describe('AstronautService', () => {
-  let astronautService: AstronautService;
+describe('PlanetService', () => {
+  let planetService: PlanetService;
 
   beforeEach(() => {
-    astronautService = new AstronautService(mockAstronautRepository);
+    planetService = new PlanetService(mockPlanetRepository);
     jest.clearAllMocks(); // Clear mocks before each test
   });
 
-  describe('getAllAstronauts', () => {
-    it('should return all astronauts with mapped originPlanet properties', async () => {
+  describe('getAllPlanets', () => {
+    it('should return all planets with mapped image properties', async () => {
       // Arrange
-      const astronauts = [
+      const planets: PlanetData[] = [
         {
           id: '1',
-          firstname: 'Neil',
-          lastname: 'Armstrong',
           name: 'Earth',
           isHabitable: 1,
           description: 'Blue Planet',
           path: '/images/earth.png',
           imageName: 'Earth Image',
+          imageId: '1',
+        },
+        {
+          id: '2',
+          name: 'Mars',
+          isHabitable: 0,
+          description: 'Red Planet',
+          path: '/images/mars.png',
+          imageName: 'Mars Image',
+          imageId: '2',
         },
       ];
-      mockAstronautRepository.getAllAstronauts.mockResolvedValue(astronauts);
+      mockPlanetRepository.getAllPlanets.mockResolvedValue(planets);
 
       // Act
-      const result = await astronautService.getAllAstronauts();
+      const result = await planetService.getAllPlanets();
 
       // Assert
       expect(result).toEqual([
         {
           id: '1',
-          firstname: 'Neil',
-          lastname: 'Armstrong',
-          originPlanet: {
-            name: 'Earth',
-            isHabitable: true,
-            description: 'Blue Planet',
-            image: {
-              path: '/images/earth.png',
-              name: 'Earth Image',
-            },
-          },
-        },
-      ]);
-      expect(mockAstronautRepository.getAllAstronauts).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('getAstronautById', () => {
-    it('should return an astronaut by ID', async () => {
-      // Arrange
-      const astronaut = {
-        id: '1',
-        firstname: 'Neil',
-        lastname: 'Armstrong',
-        name: 'Earth',
-        isHabitable: 1,
-        description: 'Blue Planet',
-        path: '/images/earth.png',
-        imageName: 'Earth Image',
-      };
-      mockAstronautRepository.getAstronautById.mockResolvedValue(astronaut);
-
-      // Act
-      const result = await astronautService.getAstronautById('1');
-
-      // Assert
-      expect(result).toEqual({
-        id: '1',
-        firstname: 'Neil',
-        lastname: 'Armstrong',
-        originPlanet: {
           name: 'Earth',
           isHabitable: true,
           description: 'Blue Planet',
@@ -87,197 +53,232 @@ describe('AstronautService', () => {
             name: 'Earth Image',
           },
         },
-      });
-      expect(mockAstronautRepository.getAstronautById).toHaveBeenCalledWith('1');
+        {
+          id: '2',
+          name: 'Mars',
+          isHabitable: false,
+          description: 'Red Planet',
+          image: {
+            path: '/images/mars.png',
+            name: 'Mars Image',
+          },
+        },
+      ]);
+      expect(mockPlanetRepository.getAllPlanets).toHaveBeenCalledTimes(1);
     });
 
-    it('should throw NotFoundError if astronaut is not found', async () => {
+    it('should filter planets by name if provided', async () => {
       // Arrange
-      mockAstronautRepository.getAstronautById.mockResolvedValue(undefined);
+      const planets: PlanetData[] = [
+        {
+          id: '1',
+          name: 'Earth',
+          isHabitable: 1,
+          description: 'Blue Planet',
+          path: '/images/earth.png',
+          imageName: 'Earth Image',
+          imageId: '1',
+        },
+      ];
+      mockPlanetRepository.getAllPlanets.mockResolvedValue(planets);
 
-      // Act & Assert
-      await expect(astronautService.getAstronautById('999')).rejects.toThrow(NotFoundError);
-      expect(mockAstronautRepository.getAstronautById).toHaveBeenCalledWith('999');
+      // Act
+      const result = await planetService.getAllPlanets('Earth');
+
+      // Assert
+      expect(result).toEqual([
+        {
+          id: '1',
+          name: 'Earth',
+          isHabitable: true,
+          description: 'Blue Planet',
+          image: {
+            path: '/images/earth.png',
+            name: 'Earth Image',
+          },
+        },
+      ]);
+      expect(mockPlanetRepository.getAllPlanets).toHaveBeenCalledWith('Earth');
+      expect(mockPlanetRepository.getAllPlanets).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('createAstronaut', () => {
-    it('should create a new astronaut and return its ID', async () => {
+  describe('getPlanetById', () => {
+    it('should return a planet by ID', async () => {
       // Arrange
-      const newAstronaut = {
-        firstname: 'Buzz',
-        lastname: 'Aldrin',
-        originPlanetId: 'earth',
-      };
-      const planet = {
-        id: 'earth',
+      const planet: PlanetData = {
+        id: '1',
         name: 'Earth',
         isHabitable: 1,
         description: 'Blue Planet',
         path: '/images/earth.png',
         imageName: 'Earth Image',
+        imageId: '1',
       };
-      mockAstronautRepository.getPlanetById.mockResolvedValue(planet);
-      mockAstronautRepository.createAstronaut.mockResolvedValue([1]);
+      mockPlanetRepository.getPlanetById.mockResolvedValue(planet);
 
       // Act
-      const result = await astronautService.createAstronaut(newAstronaut);
+      const result = await planetService.getPlanetById('1');
 
       // Assert
       expect(result).toEqual({
-        id: 1,
-        ...newAstronaut,
+        id: '1',
+        name: 'Earth',
+        isHabitable: true,
+        description: 'Blue Planet',
+        image: {
+          path: '/images/earth.png',
+          name: 'Earth Image',
+        },
       });
-      expect(mockAstronautRepository.getPlanetById).toHaveBeenCalledWith('earth');
-      expect(mockAstronautRepository.createAstronaut).toHaveBeenCalledWith(newAstronaut);
+      expect(mockPlanetRepository.getPlanetById).toHaveBeenCalledWith('1');
+      expect(mockPlanetRepository.getPlanetById).toHaveBeenCalledTimes(1);
     });
 
-    it('should throw NotFoundError if origin planet is not found', async () => {
+    it('should throw NotFoundError if planet is not found', async () => {
       // Arrange
-      const newAstronaut = {
-        firstname: 'Buzz',
-        lastname: 'Aldrin',
-        originPlanetId: 'mars',
-      };
-      mockAstronautRepository.getPlanetById.mockResolvedValue(undefined);
+      mockPlanetRepository.getPlanetById.mockResolvedValue(undefined);
 
       // Act & Assert
-      await expect(astronautService.createAstronaut(newAstronaut)).rejects.toThrow(NotFoundError);
-      expect(mockAstronautRepository.getPlanetById).toHaveBeenCalledWith('mars');
-    });
-
-    it('should throw BadRequestError if origin planet is not habitable', async () => {
-      // Arrange
-      const newAstronaut = {
-        firstname: 'Buzz',
-        lastname: 'Aldrin',
-        originPlanetId: 'mars',
-      };
-      const planet = {
-        id: 'mars',
-        name: 'Mars',
-        isHabitable: 0,
-        description: 'Red Planet',
-        path: '/images/mars.png',
-        imageName: 'Mars Image',
-      };
-      mockAstronautRepository.getPlanetById.mockResolvedValue(planet);
-
-      // Act & Assert
-      await expect(astronautService.createAstronaut(newAstronaut)).rejects.toThrow(BadRequestError);
-      expect(mockAstronautRepository.getPlanetById).toHaveBeenCalledWith('mars');
+      await expect(planetService.getPlanetById('999')).rejects.toThrow(NotFoundError);
+      expect(mockPlanetRepository.getPlanetById).toHaveBeenCalledWith('999');
+      expect(mockPlanetRepository.getPlanetById).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('updateAstronaut', () => {
-    it('should update an astronaut and return a success message', async () => {
+  describe('createPlanet', () => {
+    it('should create a new planet and return its ID', async () => {
       // Arrange
-      const updatedAstronaut = {
-        firstname: 'Buzz',
-        lastname: 'Aldrin',
-        originPlanetId: 'earth',
+      const newPlanet: Partial<Omit<Planet, 'id'>> = {
+        name: 'New Planet',
+        description: 'New Description',
+        isHabitable: true,
+        imageId: 'img1',
       };
-      const planet = {
-        id: 'earth',
-        name: 'Earth',
-        isHabitable: 1,
-        description: 'Blue Planet',
+      const image = {
         path: '/images/earth.png',
-        imageName: 'Earth Image',
+        name: 'Earth Image',
       };
-      mockAstronautRepository.getPlanetById.mockResolvedValue(planet);
-      mockAstronautRepository.updateAstronaut.mockResolvedValue(1);
+      mockPlanetRepository.getImageById.mockResolvedValue(image);
+      mockPlanetRepository.createPlanet.mockResolvedValue([1]);
 
       // Act
-      const result = await astronautService.updateAstronaut('1', updatedAstronaut);
+      const result = await planetService.createPlanet(newPlanet);
 
       // Assert
-      expect(result).toEqual({ message: 'Astronaut updated successfully' });
-      expect(mockAstronautRepository.getPlanetById).toHaveBeenCalledWith('earth');
-      expect(mockAstronautRepository.updateAstronaut).toHaveBeenCalledWith('1', updatedAstronaut);
+      expect(result).toEqual({ id: 1, ...newPlanet });
+      expect(mockPlanetRepository.getImageById).toHaveBeenCalledWith('img1');
+      expect(mockPlanetRepository.getImageById).toHaveBeenCalledTimes(1);
+      expect(mockPlanetRepository.createPlanet).toHaveBeenCalledWith(newPlanet);
+      expect(mockPlanetRepository.createPlanet).toHaveBeenCalledTimes(1);
     });
 
-    it('should throw NotFoundError if origin planet is not found', async () => {
+    it('should throw NotFoundError if image is not found', async () => {
       // Arrange
-      const updatedAstronaut = {
-        firstname: 'Buzz',
-        lastname: 'Aldrin',
-        originPlanetId: 'mars',
+      const newPlanet: Partial<Omit<Planet, 'id'>> = {
+        name: 'New Planet',
+        description: 'New Description',
+        isHabitable: true,
+        imageId: 'img1',
       };
-      mockAstronautRepository.getPlanetById.mockResolvedValue(undefined);
+      mockPlanetRepository.getImageById.mockResolvedValue(undefined);
 
       // Act & Assert
-      await expect(astronautService.updateAstronaut('1', updatedAstronaut)).rejects.toThrow(NotFoundError);
-      expect(mockAstronautRepository.getPlanetById).toHaveBeenCalledWith('mars');
-    });
-
-    it('should throw BadRequestError if origin planet is not habitable', async () => {
-      // Arrange
-      const updatedAstronaut = {
-        firstname: 'Buzz',
-        lastname: 'Aldrin',
-        originPlanetId: 'mars',
-      };
-      const planet = {
-        id: 'mars',
-        name: 'Mars',
-        isHabitable: 0,
-        description: 'Red Planet',
-        path: '/images/mars.png',
-        imageName: 'Mars Image',
-      };
-      mockAstronautRepository.getPlanetById.mockResolvedValue(planet);
-
-      // Act & Assert
-      await expect(astronautService.updateAstronaut('1', updatedAstronaut)).rejects.toThrow(BadRequestError);
-      expect(mockAstronautRepository.getPlanetById).toHaveBeenCalledWith('mars');
-    });
-
-    it('should throw NotFoundError if astronaut is not found', async () => {
-      // Arrange
-      const updatedAstronaut = {
-        firstname: 'Buzz',
-        lastname: 'Aldrin',
-        originPlanetId: 'earth',
-      };
-      const planet = {
-        id: 'earth',
-        name: 'Earth',
-        isHabitable: 1,
-        description: 'Blue Planet',
-        path: '/images/earth.png',
-        imageName: 'Earth Image',
-      };
-      mockAstronautRepository.getPlanetById.mockResolvedValue(planet);
-      mockAstronautRepository.updateAstronaut.mockResolvedValue(0);
-
-      // Act & Assert
-      await expect(astronautService.updateAstronaut('999', updatedAstronaut)).rejects.toThrow(NotFoundError);
-      expect(mockAstronautRepository.getPlanetById).toHaveBeenCalledWith('earth');
-      expect(mockAstronautRepository.updateAstronaut).toHaveBeenCalledWith('999', updatedAstronaut);
+      await expect(planetService.createPlanet(newPlanet)).rejects.toThrow(NotFoundError);
+      expect(mockPlanetRepository.getImageById).toHaveBeenCalledWith('img1');
+      expect(mockPlanetRepository.getImageById).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('deleteAstronaut', () => {
-    it('should delete an astronaut and return a success message', async () => {
+  describe('updatePlanet', () => {
+    it('should update a planet and return a success message', async () => {
       // Arrange
-      mockAstronautRepository.deleteAstronaut.mockResolvedValue(1);
+      const updatedPlanet: Partial<Planet> = {
+        name: 'Updated Planet',
+        description: 'Updated Description',
+        isHabitable: true,
+        imageId: 'img1',
+      };
+      const image = {
+        path: '/images/earth.png',
+        name: 'Earth Image',
+      };
+      mockPlanetRepository.getImageById.mockResolvedValue(image);
+      mockPlanetRepository.updatePlanet.mockResolvedValue(1);
 
       // Act
-      const result = await astronautService.deleteAstronaut('1');
+      const result = await planetService.updatePlanet('1', updatedPlanet);
 
       // Assert
-      expect(result).toEqual({ message: 'Astronaut deleted successfully' });
-      expect(mockAstronautRepository.deleteAstronaut).toHaveBeenCalledWith('1');
+      expect(result).toEqual({ message: 'Planet updated successfully' });
+      expect(mockPlanetRepository.getImageById).toHaveBeenCalledWith('img1');
+      expect(mockPlanetRepository.getImageById).toHaveBeenCalledTimes(1);
+      expect(mockPlanetRepository.updatePlanet).toHaveBeenCalledWith('1', updatedPlanet);
+      expect(mockPlanetRepository.updatePlanet).toHaveBeenCalledTimes(1);
     });
 
-    it('should throw NotFoundError if astronaut is not found', async () => {
+    it('should throw NotFoundError if image is not found', async () => {
       // Arrange
-      mockAstronautRepository.deleteAstronaut.mockResolvedValue(0);
+      const updatedPlanet: Partial<Planet> = {
+        name: 'Updated Planet',
+        description: 'Updated Description',
+        isHabitable: true,
+        imageId: 'img1',
+      };
+      mockPlanetRepository.getImageById.mockResolvedValue(undefined);
 
       // Act & Assert
-      await expect(astronautService.deleteAstronaut('999')).rejects.toThrow(NotFoundError);
-      expect(mockAstronautRepository.deleteAstronaut).toHaveBeenCalledWith('999');
+      await expect(planetService.updatePlanet('1', updatedPlanet)).rejects.toThrow(NotFoundError);
+      expect(mockPlanetRepository.getImageById).toHaveBeenCalledWith('img1');
+      expect(mockPlanetRepository.getImageById).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw NotFoundError if planet is not found', async () => {
+      // Arrange
+      const updatedPlanet: Partial<Planet> = {
+        name: 'Updated Planet',
+        description: 'Updated Description',
+        isHabitable: true,
+        imageId: 'img1',
+      };
+      const image = {
+        path: '/images/earth.png',
+        name: 'Earth Image',
+      };
+      mockPlanetRepository.getImageById.mockResolvedValue(image);
+      mockPlanetRepository.updatePlanet.mockResolvedValue(0);
+
+      // Act & Assert
+      await expect(planetService.updatePlanet('999', updatedPlanet)).rejects.toThrow(NotFoundError);
+      expect(mockPlanetRepository.getImageById).toHaveBeenCalledWith('img1');
+      expect(mockPlanetRepository.getImageById).toHaveBeenCalledTimes(1);
+      expect(mockPlanetRepository.updatePlanet).toHaveBeenCalledWith('999', updatedPlanet);
+      expect(mockPlanetRepository.updatePlanet).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('deletePlanet', () => {
+    it('should delete a planet and return a success message', async () => {
+      // Arrange
+      mockPlanetRepository.deletePlanet.mockResolvedValue(1);
+
+      // Act
+      const result = await planetService.deletePlanet('1');
+
+      // Assert
+      expect(result).toEqual({ message: 'Planet deleted successfully' });
+      expect(mockPlanetRepository.deletePlanet).toHaveBeenCalledWith('1');
+      expect(mockPlanetRepository.deletePlanet).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw NotFoundError if planet is not found', async () => {
+      // Arrange
+      mockPlanetRepository.deletePlanet.mockResolvedValue(0);
+
+      // Act & Assert
+      await expect(planetService.deletePlanet('999')).rejects.toThrow(NotFoundError);
+      expect(mockPlanetRepository.deletePlanet).toHaveBeenCalledWith('999');
+      expect(mockPlanetRepository.deletePlanet).toHaveBeenCalledTimes(1);
     });
   });
 });
