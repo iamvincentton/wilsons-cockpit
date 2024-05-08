@@ -1,5 +1,5 @@
 // React
-import { ReactNode, ButtonHTMLAttributes, CSSProperties } from "react";
+import { ReactNode, ButtonHTMLAttributes, CSSProperties, memo } from "react";
 
 // Libs
 import classnames from "classnames";
@@ -17,7 +17,7 @@ interface HUDButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   style?: CSSProperties;
 }
 
-export function HUDButton({
+const HUDButtonComponent = ({
   isActive = false,
   children,
   className,
@@ -27,7 +27,7 @@ export function HUDButton({
   size = "md",
   style,
   type = "submit",
-}: HUDButtonProps) {
+}: HUDButtonProps) => {
   const componentClassNames = classnames(
     styles.hudbutton,
     styles[`hudbutton-${size}`],
@@ -35,7 +35,7 @@ export function HUDButton({
     {
       [styles.hudbuttonLoading]: isLoading,
       [styles.hudbuttonActive]: isActive,
-    },
+    }
   );
 
   return (
@@ -49,4 +49,6 @@ export function HUDButton({
       {children}
     </button>
   );
-}
+};
+
+export const HUDButton = memo(HUDButtonComponent);
