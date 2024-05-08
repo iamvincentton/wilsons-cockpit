@@ -1,4 +1,3 @@
-// src/repositories/AstronautRepository.ts
 import knex from '../db';
 
 export interface Astronaut {

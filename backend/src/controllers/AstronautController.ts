@@ -1,4 +1,3 @@
-// src/controllers/AstronautController.ts
 import { Request, Response } from 'express';
 import { AstronautService, NotFoundError, BadRequestError } from '../services/AstronautService';
 import { AstronautRepository } from '../repositories/AstronautRepository';

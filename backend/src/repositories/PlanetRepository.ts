@@ -1,4 +1,3 @@
-// src/repositories/PlanetRepository.ts
 import knex from '../db';
 
 export interface Planet {
