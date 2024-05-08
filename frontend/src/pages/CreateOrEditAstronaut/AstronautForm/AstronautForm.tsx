@@ -1,5 +1,5 @@
 // React
-import { MouseEventHandler, FormEvent, useState } from "react";
+import { MouseEventHandler, FormEvent, useState, useCallback } from "react";
 
 // Libs
 import classnames from "classnames";
@@ -46,7 +46,7 @@ export function AstronautForm({
   onCancel,
   onSubmit,
 }: AstronautFormProps) {
-  debugger;
+  // debugger;
   const componentClassNames = classnames(styles.astronautform, className);
   const { currentPlanet } = useCurrentPlanet();
   const canCreate =
@@ -58,6 +58,18 @@ export function AstronautForm({
   const [astronautFirstname, setAstronautFirstname] = useState("");
   const [astronautLastname, setAstronautLastname] = useState("");
   const [astronautOriginPlanet, setAstronautOriginPlanet] = useState("");
+
+  const handleFirstnameChange = useCallback((e: any) => {
+    setAstronautFirstname(e.target.value);
+  }, []);
+
+  const handleLastnameChange = useCallback((e: any) => {
+    setAstronautLastname(e.target.value);
+  }, []);
+
+  const handlePlanetChange = useCallback((planet: any) => {
+    setAstronautOriginPlanet(planet.value);
+  }, []);
 
   const validateAndSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -123,7 +135,7 @@ export function AstronautForm({
             required
             defaultValue={astronautForUpdate?.firstname || ""}
             error={formState.firstname}
-            onChange={(e) => setAstronautFirstname(e.target.value)}
+            onChange={handleFirstnameChange}
           />
           <HUDInput
             name="lastname"
@@ -132,7 +144,7 @@ export function AstronautForm({
             required
             defaultValue={astronautForUpdate?.lastname || ""}
             error={formState.lastname}
-            onChange={(e) => setAstronautLastname(e.target.value)}
+            onChange={handleLastnameChange}
           />
           <HUDAutoComplete
             name="planet"
@@ -140,7 +152,7 @@ export function AstronautForm({
             required
             defaultValue={defaultSelectedPlanet}
             error={formState.planet}
-            onChange={(planet) => setAstronautOriginPlanet(planet.value)}
+            onChange={handlePlanetChange}
             fetchOptions={getPlanetListByNameAPICall}
           />
           <Flexbox
