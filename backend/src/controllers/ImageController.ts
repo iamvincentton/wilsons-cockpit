@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
-import knex from '../db';
+import { ImageService, NotFoundError } from '../services/ImageService';
+import { ImageRepository } from '../repositories/ImageRepository';
+
+const imageService = new ImageService(new ImageRepository());
 
 const ImageController = {
   getAll: async (req: Request, res: Response): Promise<void> => {
     try {
-      const images = await knex('images').select('*');
+      const images = await imageService.getAllImages();
       res.status(200).json(images);
     } catch (error) {
       res.status(500).json({ error: 'Internal Server Error' });
@@ -14,22 +17,22 @@ const ImageController = {
   getById: async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     try {
-      const image = await knex('images').where('id', id).first();
-      if (image) {
-        res.status(200).json(image);
-      } else {
-        res.status(404).json({ error: 'Image not found' });
-      }
+      const image = await imageService.getImageById(id);
+      res.status(200).json(image);
     } catch (error) {
-      res.status(500).json({ error: 'Internal Server Error' });
+      if (error instanceof NotFoundError) {
+        res.status(404).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
     }
   },
 
   create: async (req: Request, res: Response): Promise<void> => {
     const { name, path } = req.body;
     try {
-      const [id] = await knex('images').insert({ name, path });
-      res.status(200).json({ id, name, path });
+      const image = await imageService.createImage({ name, path });
+      res.status(201).json(image);
     } catch (error) {
       res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -39,28 +42,28 @@ const ImageController = {
     const { id } = req.params;
     const { name, path } = req.body;
     try {
-      const updatedRows = await knex('images').where('id', id).update({ name, path });
-      if (updatedRows > 0) {
-        res.status(200).json({ message: 'Image updated successfully' });
-      } else {
-        res.status(404).json({ error: 'Image not found' });
-      }
+      const result = await imageService.updateImage(id, { name, path });
+      res.status(200).json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Internal Server Error' });
+      if (error instanceof NotFoundError) {
+        res.status(404).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
     }
   },
 
   delete: async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     try {
-      const deletedRows = await knex('images').where('id', id).del();
-      if (deletedRows > 0) {
-        res.status(200).json({ message: 'Image deleted successfully' });
-      } else {
-        res.status(404).json({ error: 'Image not found' });
-      }
+      const result = await imageService.deleteImage(id);
+      res.status(200).json(result);
     } catch (error) {
-      res.status(500).json({ error: 'Internal Server Error' });
+      if (error instanceof NotFoundError) {
+        res.status(404).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
     }
   },
 };
