@@ -1,4 +1,3 @@
-// src/repositories/PlanetRepository.ts
 import knex from '../db';
 
 export interface Planet {
@@ -9,7 +8,7 @@ export interface Planet {
   imageId: string;
 }
 
-interface PlanetData {
+export interface PlanetData {
   id: string;
   name: string;
   description: string;

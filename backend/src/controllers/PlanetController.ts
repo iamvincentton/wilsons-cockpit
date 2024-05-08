@@ -1,4 +1,3 @@
-// src/controllers/PlanetController.ts
 import { Request, Response } from 'express';
 import { PlanetService, NotFoundError } from '../services/PlanetService';
 import { PlanetRepository } from '../repositories/PlanetRepository';

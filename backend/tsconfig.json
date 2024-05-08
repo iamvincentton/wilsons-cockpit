@@ -6,6 +6,6 @@
     "outDir": "./build",
     "esModuleInterop": true,
     "strict": true,
-    "types": ["node", "knex", "cors"],
+    "types": ["node", "knex", "cors", "jest"]
   }
 }

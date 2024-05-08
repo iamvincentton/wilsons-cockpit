@@ -1,4 +1,3 @@
-// src/repositories/AstronautRepository.ts
 import knex from '../db';
 
 export interface Astronaut {
@@ -8,7 +7,7 @@ export interface Astronaut {
   originPlanetId: string;
 }
 
-interface AstronautData {
+export interface AstronautData {
   id: string;
   firstname: string;
   lastname: string;
@@ -19,7 +18,7 @@ interface AstronautData {
   imageName: string;
 }
 
-interface PlanetData {
+export interface PlanetData {
   id: string;
   isHabitable: number;
 }
@@ -28,7 +27,7 @@ export class AstronautRepository {
   async getAllAstronauts(): Promise<AstronautData[]> {
     return await knex('astronauts')
       .select('astronauts.*', 'planets.name', 'planets.isHabitable', 'planets.description', 'images.path', 'images.name as imageName')
-      .join('planets', 'planets.id', '=', 'astronauts.originPlanetId')
+      .innerJoin('planets', 'planets.id', '=', 'astronauts.originPlanetId')
       .join('images', 'images.id', '=', 'planets.imageId');
   }
 
