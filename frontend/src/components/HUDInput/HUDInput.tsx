@@ -1,5 +1,5 @@
 // React
-import { forwardRef, InputHTMLAttributes } from "react";
+import { forwardRef, InputHTMLAttributes, memo } from "react";
 
 // Libs
 import classnames from "classnames";
@@ -12,7 +12,7 @@ interface HUDInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
 }
 
-export const HUDInput = forwardRef<HTMLInputElement | null, HUDInputProps>(
+export const HUDInput = memo(forwardRef<HTMLInputElement | null, HUDInputProps>(
   function HUDInputComponent(
     {
       className,
@@ -64,4 +64,4 @@ export const HUDInput = forwardRef<HTMLInputElement | null, HUDInputProps>(
       </div>
     );
   },
-);
+));
