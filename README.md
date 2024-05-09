@@ -1,7 +1,5 @@
 # Wilson - Cockpit
 
-The technical test of Eleven Labs.
-
 ## 1 - Run the backend project
 
 First, go to the `backend` directory:
