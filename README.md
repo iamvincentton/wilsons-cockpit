@@ -41,6 +41,21 @@ For the migrate command, you need to see: `Batch 1 run: 3 migrations`
 
 For the seed command, you need to see: `Ran 1 seed files`
 
+### Running Tests
+
+For testing, we use Jest, Supertest, and ts-jest. To run the tests, execute the following command directly on the terminal:
+
+```shell
+npm run test
+```
+
+Make sure that your devDependencies include the following packages:
+
+- jest
+- supertest
+- ts-jest
+
+
 ## 2 - Run the frontend project
 
 First, go to the `frontend` directory:
